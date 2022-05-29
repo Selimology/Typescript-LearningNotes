@@ -70,3 +70,53 @@ const WeebNames = {
 /* since we are using const enum, we can't change the values of the enum
 So it will give an error since we tried to change the values of the enum */
 WeebNames.Kirito = 11
+
+/* Enum vs Objects 
+
+To summarize, within the application,
+you may use the Enum with "Name.value" However, when using it as 
+library it is recommended to use the object and not enum.
+
+You also can't the values of the enum readonly.
+*/
+
+enum Colors {
+  Blue = "blue",
+  Green = "green",
+}
+
+const ColorsObj = {
+  Blue: "blue",
+  Green: "green",
+} as const
+
+//Only strings work - showColor("blue") / showColor("green")
+type DesiredAnswers = "blue" | "green"
+/*
+Using the below code, we make it readonly for the Blue and Green's values.
+So rather than accepting any string, it must be "blue" or "green"
+*/
+
+type perfectDesiredAnswers = typeof ColorsObj[keyof typeof ColorsObj]
+
+/*Using the above we take the value of types in the object and and accept "blue" or "green"
+and ColorsObj.Blue or ColorsObj.Green with no need of 2 types.
+
+Read More here: 
+Resource:
+https://stackoverflow.com/questions/55377365/what-does-keyof-typeof-mean-in-typescript?newreg=e2c13b1653fb44dc9fbf7f38709f1bba
+https://www.youtube.com/watch?v=JfcLkoBirZo
+*/
+
+function showColor(color: DesiredAnswers) {
+  console.log(color)
+}
+
+/* When using library, if you are using enum, and want to call showColor
+you'll have to use Colors.Blue */
+showColor(Colors.Blue)
+/* Aftering Changing color:Colors to color:DesiredAnswers, below works. */
+showColor("blue")
+/* with the type perfectDesiredAnswers we now also accept ColorsObj.Blue or ColorsObj.Green
+as well as "blue" and "green" */
+showColor(ColorsObj.Blue)
